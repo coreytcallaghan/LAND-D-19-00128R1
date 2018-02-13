@@ -57,27 +57,30 @@ dev.off()
 
 preds.exotic.diversity <- predict(exotic_SD.gauss, exclude = "s(BCR_name)", se.fit = TRUE)
 plot.exotic.diversity <- data.frame(exotic_SD,
-                                   mu   = exp(preds.exotic.diversity$fit),
-                                   low  = exp(preds.exotic.diversity$fit - 1.96 * preds.exotic.diversity$se.fit),
-                                   high = exp(preds.exotic.diversity$fit + 1.96 * preds.exotic.diversity$se.fit))
+                                    mu   = exp(preds.exotic.diversity$fit),
+                                    low  = exp(preds.exotic.diversity$fit - 1.96 * preds.exotic.diversity$se.fit),
+                                    high = exp(preds.exotic.diversity$fit + 1.96 * preds.exotic.diversity$se.fit))
 
-## run a negbin model, no transforming
+## run a tweedie model, no transforming
 tic(
-  exotic_SD.nb <- bam(EFFECTIVE_SD ~ AGGREGATED_LANDCOVER + SEASON  + s(BCR_name, bs="re") +
-                           s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING),
-                         family=nb(), data=exotic_SD, chunk.size = 75000))
+  exotic_SD.tw <- bam(EFFECTIVE_SD ~ AGGREGATED_LANDCOVER + SEASON  + s(BCR_name, bs="re") +
+                        s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING),
+                      family=tw(), data=exotic_SD, chunk.size = 75000))
 toc()
 
 ## create predictions based on model
-preds.exotic.diversity.nb <- predict(exotic_SD.nb, exclude = "s(BCR_name)", se.fit = TRUE)
-plot.exotic.diversity.nb <- data.frame(exotic_SD,
-                                    mu   = exp(preds.exotic.diversity.nb$fit),
-                                    low  = exp(preds.exotic.diversity.nb$fit - 1.96 * preds.exotic.diversity.nb$se.fit),
-                                    high = exp(preds.exotic.diversity.nb$fit + 1.96 * preds.exotic.diversity.nb$se.fit))
+preds.exotic.diversity.tw <- predict(exotic_SD.tw, exclude = "s(BCR_name)", se.fit = TRUE)
+plot.exotic.diversity.tw <- data.frame(exotic_SD,
+                                       mu   = exp(preds.exotic.diversity.tw$fit),
+                                       low  = exp(preds.exotic.diversity.tw$fit - 1.96 * preds.exotic.diversity.tw$se.fit),
+                                       high = exp(preds.exotic.diversity.tw$fit + 1.96 * preds.exotic.diversity.tw$se.fit))
+
+## compare the two
+summary(exotic_SD.gauss)
+summary(exotic_SD.tw)
 
 
-
-
+############################################################################
 ## run analysis on native species
 ## check histogram again
 hist(native_SD$EFFECTIVE_SD)
@@ -103,31 +106,14 @@ dev.off()
 ## create predictions based on model
 preds.native.diversity <- predict(native_SD.gauss, exclude = "s(BCR_name)", se.fit = TRUE)
 plot.native.diversity <- data.frame(native_SD,
-                                   mu   = exp(preds.native.diversity$fit),
-                                   low  = exp(preds.native.diversity$fit - 1.96 * preds.native.diversity$se.fit),
-                                   high = exp(preds.native.diversity$fit + 1.96 * preds.native.diversity$se.fit))
-
-
-
-## run a negbin model, no transforming
-tic(
-  native_SD.nb <- bam(EFFECTIVE_SD ~ AGGREGATED_LANDCOVER + SEASON  + s(BCR_name, bs="re") +
-                        s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING),
-                      family=nb(), data=native_SD, chunk.size = 75000))
-toc()
-
-
-## create predictions based on model
-preds.native.diversity.nb <- predict(native_SD.nb, exclude = "s(BCR_name)", se.fit = TRUE)
-plot.native.diversity.nb <- data.frame(native_SD,
-                                    mu   = exp(preds.native.diversity.nb$fit),
-                                    low  = exp(preds.native.diversity.nb$fit - 1.96 * preds.native.diversity.nb$se.fit),
-                                    high = exp(preds.native.diversity.nb$fit + 1.96 * preds.native.diversity.nb$se.fit))
+                                    mu   = exp(preds.native.diversity$fit),
+                                    low  = exp(preds.native.diversity$fit - 1.96 * preds.native.diversity$se.fit),
+                                    high = exp(preds.native.diversity$fit + 1.96 * preds.native.diversity$se.fit))
 
 
 
 ## combine the two richness files into one for plotting
-plot.species.diversity <- rbind(plot.native.diversity.nb, plot.exotic.diversity.nb)
+plot.species.diversity <- rbind(plot.native.diversity, plot.exotic.diversity.tw)
 
 
 ## plot of mean predicted effective species diversity +/- standard error for native and exotics
@@ -160,10 +146,10 @@ pd <- plot.species.diversity %>%
 
 
 ## extract parameter estimates for landcover for both models and merge to plot
-exotic.diversity.lc <- termplot(exotic_SD.nb, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
+exotic.diversity.lc <- termplot(exotic_SD.tw, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
 exotic.diversity.lc$variable <- 'Exotic Diversity'
 
-native.diversity.lc <- termplot(native_SD.nb, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
+native.diversity.lc <- termplot(native_SD.gauss, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
 native.diversity.lc$variable <- 'Native Diversity'
 
 ## landcover
@@ -197,8 +183,8 @@ library(cowplot)
 library(ggpubr)
 
 diversity_figure <- plot_grid(pd, ped,
-          labels=c("A", "B"),
-          ncol=1, nrow=2)
+                              labels=c("A", "B"),
+                              ncol=1, nrow=2)
 
 setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Figures/Figure 3")
 
@@ -247,17 +233,18 @@ gamOut <- function(res, file="test.csv", ndigit=5, writecsv=T) {
 
 
 ### exotic
-anova.gam(native_SD.nb)
-summary(native_SD.nb)
+anova.gam(native_SD.tw)
+summary(native_SD.tw)
 
-gamOut(native_SD.nb, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/native_diversity.csv")
+gamOut(native_SD.tw, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/native_diversity.csv")
 
 
 ### native
-anova.gam(exotic_SD.nb)
-summary(exotic_SD.nb)
+anova.gam(exotic_SD.gauss)
+summary(exotic_SD.gauss)
 
-gamOut(exotic_SD.nb, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/exotic_diversity.csv")
+gamOut(exotic_SD.gauss, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/exotic_diversity.csv")
+
 
 
 
