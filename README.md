@@ -33,17 +33,17 @@ This leaves 7,396,020 checklists which are to be used in the analysis!
 ###### Step 4.1.2: display x/y values
 ###### Step 4.1.3: use 'extract values to points' tool with the EVENTS data (do not export to shapefile!!)
 ###### Step 4.1.4: use 'join' tool to join the extracted features from the previous steps with the 2014 urban city census layer
-####### Step 4.1.4.1: used intersect and search radius of 25 meters
-####### Step 4.1.4.2: removed all unneccesary columns
-####### Step 4.1.5: export the table as a txt file
-####### Step 4.1.6: fix the column names in R
+###### Step 4.1.4.1: used intersect and search radius of 25 meters
+###### Step 4.1.4.2: removed all unneccesary columns
+###### Step 4.1.5: export the table as a txt file
+###### Step 4.1.6: fix the column names in R
 ###### Step 4.1.7: make one column that is urban(belongs to a city) or non-urban (doesn't belong to a city)
 ###### Step 4.1.8: rename the NLCD values to the associated BCRs
 This is saved as eBird_spatial_joins.txt and then after cleaning in R (making_final_spatial_data_eBird_checklists.R) is saved as "eBird_sampling_spatial_data.RData"
 
 
 ## Step 4: Extract all unique species seen in the lower 48 from eBird sqldb
-		** This is saved as "unique_species_merged_with_clements.csv"
+This is saved as "unique_species_merged_with_clements.csv"
 
 
 ## Step 5: Use Clements 2017 checklist to assign the taxonomic information to each species
