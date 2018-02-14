@@ -22,7 +22,7 @@ LANDCOVER <- data.frame(NLCD_2011_value = as.integer(c(11, 21, 22, 23, 24, 31, 4
                         AGGREGATED_LANDCOVER = c("Green Area", "Open-urban", "Low-intensity Developed", 
                                                  "Medium/high-intensity Developed", "Medium/high-intensity Developed",
                                                  "Open-urban", "Green Area", "Green Area", "Green Area", 
-                                                 "Green Area","Green Area", "Agriculture", "Agriculture",
+                                                 "Green Area", "Agriculture", "Agriculture",
                                                  "Agriculture", "Green Area", "Green Area"), stringsAsFactors = FALSE)
 
 
