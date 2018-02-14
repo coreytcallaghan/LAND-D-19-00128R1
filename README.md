@@ -2,6 +2,18 @@
 
 Due to the size of the files, this repository is only for a portion of the overall analysis. It mirrors a local repository on my machine, for a portion of clustering community bird data in collaboration with @mitchest
 
+There are three main analyses in this project:
+
+**ANALYSIS 1:** Investigating pattern of exotic and native species response to urbanization
+
+
+
+
+
+
+
+
+
 # Workflow of the overall project
 
 
