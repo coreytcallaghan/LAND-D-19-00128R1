@@ -6,12 +6,24 @@ There are three main analyses in this project:
 
 **ANALYSIS 1:** Investigating pattern of exotic and native species response to urbanization
 
+This analysis is done off this repo:
+![alt text](https://github.com/coreytcallaghan/United-States-Urban-Birds-Patterns/blob/master/Figures%20for%20paper/Figure%202/Figure_2.png)
+
+Figure 2. (A) Mean predicted species richness (± standard error) response to landcover classes for both exotic (left) and native (right) species. Responses are predicted from generalized additive models and represent species richness observed on a given checklist. (B) Parameter estimates and 95% confidence intervals for the associated landcover classes for exotic species richness (left) and native species richness (right). See appendix 3 for model details. Note the different scales on the y-axes.
+
+![alt text](https://github.com/coreytcallaghan/United-States-Urban-Birds-Patterns/blob/master/Figures%20for%20paper/Figure%203/Figure_3.png)
+
+Figure 3. (A) Mean predicted effective species diversity (± standard error) response to landcover classes for both exotic (left) and native (right) species. Responses are predicted from generalized additive models and represent effective species diversity observed on a given checklist. (B) Parameter estimates and 95% confidence intervals for the associated landcover classes for exotic effective species diversity (left) and native effective species diversity (right). See appendix 3 for model details. Note the different scales on the y-axes.
 
 
+![alt text](https://github.com/coreytcallaghan/United-States-Urban-Birds-Patterns/blob/master/Figures%20for%20paper/Figure%204/Figure_4.png)
+Figure 4. (A) Mean predicted species abundance (± standard error) response to landcover classes for both exotic (left) and native (right) species. Responses are predicted from generalized additive models and represent the total species abundance observed on a given checklist. (B) Parameter estimates and 95% confidence intervals for the associated landcover classes for exotic species abundance (left) and native species abundance (right). See appendix 3 for model details. Note the different scales on the y-axes.
 
 
+**ANALYSIS 2:** Investigating the relationship among bird communities and urbanization patterns. Are there a significant difference among landcovers in the number of urban bird communities that belong. Determine why urban green is highest, possibly because it attracts natural green and urban communities
 
 
+**ANALYSIS 3:** Investigating habitat heterogeneity within urban areas. Is the heterogeneity higher within urban areas and this may explain why the highest biodiversity metrics occur within urban green areas, as opposed to natural green areas.
 
 
 # Workflow of the overall project
