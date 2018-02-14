@@ -233,17 +233,17 @@ gamOut <- function(res, file="test.csv", ndigit=5, writecsv=T) {
 
 
 ### exotic
-anova.gam(native_SD.tw)
-summary(native_SD.tw)
+anova.gam(native_SD.gauss)
+summary(native_SD.gauss)
 
-gamOut(native_SD.tw, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/native_diversity.csv")
+gamOut(native_SD.gauss, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/native_diversity.csv")
 
 
 ### native
-anova.gam(exotic_SD.gauss)
-summary(exotic_SD.gauss)
+anova.gam(exotic_SD.tw)
+summary(exotic_SD.tw)
 
-gamOut(exotic_SD.gauss, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/exotic_diversity.csv")
+gamOut(exotic_SD.tw, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/exotic_diversity.csv")
 
 
 
