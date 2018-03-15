@@ -1,16 +1,17 @@
 library(dplyr)
 library(readr)
+library(tidyr)
 
 eBird_sampling_spatial_data  <- read_csv("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Data/eBird data/eBird_spatial_joins.txt")
 
 
 eBird_sampling_spatial_data$NLCD_2011_value <- eBird_sampling_spatial_data$RASTERVALU
 
-
-eBird_sampling_spatial_data$URBAN_NONURBAN <- eBird_sampling_spatial_data$Join_Count
-eBird_sampling_spatial_data$URBAN_NONURBAN <- gsub("0", "NONURBAN", eBird_sampling_spatial_data$URBAN_NONURBAN)
-eBird_sampling_spatial_data$URBAN_NONURBAN <- gsub("1", "URBAN", eBird_sampling_spatial_data$URBAN_NONURBAN)
-
+eBird_sampling_spatial_data <- eBird_sampling_spatial_data %>%
+  replace_na(list(UATYP10="NONURBAN")) %>%
+  mutate(UATYP10 = gsub("U", "URBAN", .$UATYP10)) %>%
+  mutate(UATYP10 = gsub("C", "URBAN", .$UATYP10)) %>%
+  mutate(URBAN_NONURBAN = UATYP10)
 
 eBird_sampling_spatial_data$TARGET_FID <- NULL
 eBird_sampling_spatial_data$OBJECTID <- NULL
