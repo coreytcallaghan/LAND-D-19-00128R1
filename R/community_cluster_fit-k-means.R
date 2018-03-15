@@ -20,7 +20,7 @@ my_kmeans <- function(k, data, ...) {
                                 k = nrow(fm$centers)))
 }  # this is really wasteful, as only within_ss changes each row, but meh, saves an unlist later
 
-# function to fit the kemans to different matrices
+# function to fit the kmeans to different matrices
 ## k_range is the range of cluster numbers to fir and test
 ## do.clustering is whether to actually perform the clustering (TRUE) or just check all data can be loaded and is numeric (FALSE)
 fit_kmeans <- function(file, k_range, do.clustering = TRUE, ...) {
@@ -34,7 +34,11 @@ fit_kmeans <- function(file, k_range, do.clustering = TRUE, ...) {
   #names(matrix) <- 1:ncol(matrix)
   if (any(colSums(matrix) == 0)) stop("There are columns with zero data")
   # do the k-means
-  if (do.clustering) return(lapply(k_range, my_kmeans, matrix, ...))
+  if (do.clustering) {
+    out <- lapply(k_range, my_kmeans, matrix, ...)
+    names(out) <- k_range
+    out
+  }
 }
 
 
