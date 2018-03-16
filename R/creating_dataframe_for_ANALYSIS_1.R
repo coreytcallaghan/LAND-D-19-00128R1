@@ -39,7 +39,13 @@ for (fileName in fileNames) {
   
   ## rename "Green Area" based on urban or nonurban delineation
   df <- within(df, AGGREGATED_LANDCOVER[AGGREGATED_LANDCOVER == "Green Area" & URBAN_NONURBAN == "URBAN"] <- "Urban Green Area")
-  df <- within(df, AGGREGATED_LANDCOVER[AGGREGATED_LANDCOVER == "Green Area" & URBAN_NONURBAN == "NONURBAN"] <- "Natural Green Area")
+  df <- within(df, AGGREGATED_LANDCOVER[AGGREGATED_LANDCOVER == "Green Area" & URBAN_NONURBAN == "NONURBANRBAN"] <- "Natural Green Area")
+  
+  ## fix latitude/longitude
+  df <- df %>%
+    select(-LATITUDE.y, - LONGITUDE.y) %>%
+    rename(LATITUDE = LATITUDE.x) %>%
+    rename(LONGITUDE = LONGITUDE.x)
   
   ## calculate richness by checklist
   SR <- df %>% group_by(CLASSIFICATION, SAMPLING_EVENT_IDENTIFIER, AGGREGATED_LANDCOVER, BCR_name, OBSERVATION_DATE) %>%
@@ -120,13 +126,6 @@ species_diversity_abundance_analysis <- bind_rows(myfiles)
 
 rm(temp)
 rm(myfiles)
-
-## Apparently a small number of checklists weren't assigned an urban or nonurban layer when
-## doing the spatial joins. These remained as "Green Area" as opposed to Urban or Natural Green Area
-## in this step, I filtered these out, before saving the data for analysis 1
-species_richness_analysis <- species_richness_analysis %>% filter(AGGREGATED_LANDCOVER != "Green Area")
-species_diversity_abundance_analysis <- species_diversity_abundance_analysis %>% filter(AGGREGATED_LANDCOVER != "Green Area")
-
 
 ## add season component to each dataframe for further analyses
 getSeason <- function(DATES) {

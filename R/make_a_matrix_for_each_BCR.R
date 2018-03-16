@@ -36,17 +36,18 @@ load(fileName)
 ## this removes any checklists which don't have full species on them
 df <- df %>% inner_join(., Species_classification, by=c("COMMON_NAME", "SCIENTIFIC_NAME"))
 
+## fix latitude/longitude
+df <- df %>%
+  select(-LATITUDE.y, - LONGITUDE.y) %>%
+  rename(LATITUDE = LATITUDE.x) %>%
+  rename(LONGITUDE = LONGITUDE.x)
+
 ## merge dataframe with the LANDCOVER dataframe created above
 df <- df %>% inner_join(., LANDCOVER, by="NLCD_2011_value")
 
 ## rename "Green Area" based on urban or nonurban delineation
 df <- within(df, AGGREGATED_LANDCOVER[AGGREGATED_LANDCOVER == "Green Area" & URBAN_NONURBAN == "URBAN"] <- "Urban Green Area")
-df <- within(df, AGGREGATED_LANDCOVER[AGGREGATED_LANDCOVER == "Green Area" & URBAN_NONURBAN == "NONURBAN"] <- "Natural Green Area")
-
-## Apparently a small number of checklists weren't assigned an urban or nonurban layer when
-## doing the spatial joins. These remained as "Green Area" as opposed to Urban or Natural Green Area
-## in this step, I filtered these out, before saving the data for analysis 1
-df <- df %>% filter(AGGREGATED_LANDCOVER != "Green Area")
+df <- within(df, AGGREGATED_LANDCOVER[AGGREGATED_LANDCOVER == "Green Area" & URBAN_NONURBAN == "NONURBANRBAN"] <- "Natural Green Area")
 
 ## remove any checklist that has a single X on it
 ### Counts how many 'x's per checklist
