@@ -49,6 +49,9 @@ df <- df %>% inner_join(., LANDCOVER, by="NLCD_2011_value")
 df <- within(df, AGGREGATED_LANDCOVER[AGGREGATED_LANDCOVER == "Green Area" & URBAN_NONURBAN == "URBAN"] <- "Urban Green Area")
 df <- within(df, AGGREGATED_LANDCOVER[AGGREGATED_LANDCOVER == "Green Area" & URBAN_NONURBAN == "NONURBANRBAN"] <- "Natural Green Area")
 
+df <- df %>%
+  mutate(URBAN_NONURBAN = gsub("NONURBANRBAN", "NONURBAN", .$URBAN_NONURBAN))
+
 ## remove any checklist that has a single X on it
 ### Counts how many 'x's per checklist
 X_missing <- df %>%
