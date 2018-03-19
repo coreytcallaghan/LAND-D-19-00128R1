@@ -60,10 +60,15 @@ min_AIC_clusters <- purrr::map2(allocations, min_AIC_data$k, retreive_k_clusters
 clusters_landcover <- lapply(names(min_AIC_clusters), join_lc_data, min_AIC_clusters, localities_list)
 names(clusters_landcover) <- names(min_AIC_clusters)
 
+# entropy values: examine distriubtion of assembleges
+# low entropy indicates less even distribution among groups (often indicates gruops with low or no membership)
+
+# urban_diff values: examine whether (proportionally) more of the communities are in non-urban areas
+# positive values will mean more proportional membership of sites to the non-urban component
+
 
 #### urban / non-urban comparison
 
-# entropy values - examine distriubtion of assembleges
 urban_entropy <- gather(bind_rows(lapply(clusters_landcover, calculate_entropy, type = "urban"),
                                   .id = "BCR"), "zone", "value", -BCR)
 
@@ -74,7 +79,7 @@ ggplot(urban_entropy, aes(y = value, x = zone)) +
 
 summary(nlme::lme(fixed = value ~ zone, random = ~ 1 | BCR, data = urban_entropy))
 
-# urban_diff values - examine whether (proportionally) more of the communities are in non-urban areas
+
 urban_urbandiff <- bind_rows(lapply(clusters_landcover, calculate_urban_diff, type = "urban"),
                              .id = "BCR")
 
@@ -116,25 +121,6 @@ ggplot(landcover_urbandiff, aes(y = urban_diff, x = BCR)) +
 
 # calculate per-cluster species metrics (i.e. community metrics) ------------------------
 
-# calculate metrics (richess, diversity etc.) given a clustering solution to index by
-metrics_per_cluster <- function(x, cluster_allocation, data) {
-  data <- data[which(cluster_allocation %in% x),] %>%
-    select(which(colSums(.) > 0))
-  data.frame(richness = ncol(data))
-}
-
-# subset to appropriate data and get metrics per cluster per bcr
-calculate_cluster_metrics <- function(x, clustering, localities) {
-  locality_df <- data.frame(LOCALITY_ID = localities[[x]], stringsAsFactors = F)
-  matrix <- get(load(paste0("Data/Matrix for each BCR/", x, "_matrix.RData")))
-  matrix <- matrix %>%
-    inner_join(locality_df, by = "LOCALITY_ID") %>%
-    ungroup() %>%
-    select(-(LOCALITY_ID:NAME10)) %>%
-    select(which(colSums(.) > 0))
-  bind_rows(lapply(unique(clustering[[x]]), metrics_per_cluster, clustering[[x]], matrix), .id = "cluster")
-}
-
 clusters_metrics <- lapply(names(min_AIC_clusters), calculate_cluster_metrics,
                            min_AIC_clusters, localities_list)
 names(clusters_metrics) <- names(min_AIC_clusters)
@@ -151,6 +137,8 @@ cluster_metrics_lcdiff <- inner_join(landcover_urbandiff, cluster_metrics_df)
 
 plot(urban_diff~richness, data = cluster_metrics_urbandiff)
 plot(urban_diff~richness, data = cluster_metrics_lcdiff)
+plot(urban_diff~diversity, data = cluster_metrics_urbandiff)
+plot(urban_diff~diversity, data = cluster_metrics_lcdiff)
 
 
 

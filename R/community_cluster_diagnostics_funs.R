@@ -58,3 +58,23 @@ calculate_urban_diff <- function(x, type = "urban") {
                cluster = 1:ncol(xtab))
   }
 }
+
+# calculate metrics (richess, diversity etc.) given a clustering solution to index by
+metrics_per_cluster <- function(x, cluster_allocation, data) {
+  data <- data[which(cluster_allocation %in% x),] %>%
+    select(which(colSums(.) > 0))
+  data.frame(richness = ncol(data),
+             diversity = shannon_entropy(apply(data, 2, function(x) sum(x)/length(x))))
+}
+
+# subset to appropriate data and get metrics per cluster per bcr
+calculate_cluster_metrics <- function(x, clustering, localities) {
+  locality_df <- data.frame(LOCALITY_ID = localities[[x]], stringsAsFactors = F)
+  matrix <- get(load(paste0("Data/Matrix for each BCR/", x, "_matrix.RData")))
+  matrix <- matrix %>%
+    inner_join(locality_df, by = "LOCALITY_ID") %>%
+    ungroup() %>%
+    select(-(LOCALITY_ID:NAME10)) %>%
+    select(which(colSums(.) > 0))
+  bind_rows(lapply(unique(clustering[[x]]), metrics_per_cluster, clustering[[x]], matrix), .id = "cluster")
+}
