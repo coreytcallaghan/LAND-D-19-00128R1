@@ -59,8 +59,8 @@ fit_kmeans <- function(file, k_range, min.checklists = 1, do.clustering = TRUE, 
 
 files <- list.files("Data/Matrix for each BCR/")
 allocations <- mclapply(mc.cores = 16, # number of cores - can set to 1 if on windows or else use detectCores()
-                        X = files, FUN = fit_kmeans, 2:50, pres.abs = TRUE, 
-                        iter.max = 30, nstart = 20) # extra arugments to pass to kmeans
+                        X = files, FUN = fit_kmeans, 2:30, pres.abs = FALSE, 
+                        iter.max = 30, nstart = 10) # extra arugments to pass to kmeans
 names(allocations) <- gsub("_matrix.RData", "", files)
 
 saveRDS(allocations, file = "bcr_kmeans_allocations.rds")
