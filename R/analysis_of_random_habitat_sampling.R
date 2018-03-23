@@ -10,7 +10,7 @@ library(vegan)
 ## load data in
 city_metadata <- read_csv("Data/Zonal statistics for random polygons/Zonal_metadata.txt")
 
-city_tabulate_area <- read_csv("Data/Zonal statistics for random polygons/Zonal_counts.txt")
+city_tabulate_area <- read_csv("Data/Zonal statistics for random polygons/Zonal_statistics.txt")
 
 ## create a landcover table that each dataframe will be joined with
 LANDCOVER <- data.frame(NLCD_2011_value = c("VALUE_11", "VALUE_21", "VALUE_22", "VALUE_23", "VALUE_24", "VALUE_31", 
@@ -32,17 +32,16 @@ clean_df <- city_tabulate_area %>%
   select(-VALUE_0) %>%
   filter(VALUE_12 == 0) %>%
   select(-VALUE_12) %>%
-  mutate(OBJECTID = as.character(as.integer(OBJECTID))) %>%
+  mutate(ORIG_FID = as.character(as.integer(ORIG_FID))) %>%
   gather(., key="NLCD_2011_value", value="value", VALUE_11:VALUE_95) %>%
   inner_join(., LANDCOVER, by="NLCD_2011_value") %>%
-  select(-OBJECTID_1)
+  select(-OBJECTID)
 
 ## merge with the metadata
 merged_df <- city_metadata %>%
-  select(OBJECTID, BCR, BCRNAME, Shape_Length, 
-         Shape_Area, Join_Count) %>%
-  mutate(OBJECTID = as.character(as.numeric(OBJECTID))) %>%
-  inner_join(., clean_df, by="OBJECTID")
+  select(ORIG_FID, BCR, BCRNAME, Join_Count) %>%
+  mutate(ORIG_FID = as.character(as.numeric(ORIG_FID))) %>%
+  inner_join(., clean_df, by="ORIG_FID")
   
 ## rename "Green Area" based on urban or nonurban delineation
 merged_df <- within(merged_df, AGGREGATED_LANDCOVER[AGGREGATED_LANDCOVER == "Green Area" & Join_Count == 1] <- "Urban Green Area")
@@ -51,21 +50,30 @@ merged_df <- within(merged_df, AGGREGATED_LANDCOVER[AGGREGATED_LANDCOVER == "Gre
   
 ## calculate shannon index of habitat pixel counts
 diversity_values <- merged_df %>%
-  group_by(OBJECTID) %>%
+  group_by(ORIG_FID) %>%
   summarise(div = diversity(value))
 
 ## merge the diversity values back with the sampling data
 final_df <- merged_df %>%
-  select(-value, -Join_Count, -Shape_Length, -Shape_Area, -NLCD_2011_value) %>%
-  distinct(OBJECTID, .keep_all=TRUE) %>%
-  inner_join(., diversity_values, by="OBJECTID")
+  select(-value, -Join_Count, -NLCD_2011_value) %>%
+  distinct(ORIG_FID, .keep_all=TRUE) %>%
+  inner_join(., diversity_values, by="ORIG_FID")
 
 ## make plot
-final_df %>%
+mean_BCR <- final_df %>%
   filter(AGGREGATED_LANDCOVER %in% c("Urban Green Area", "Natural Green Area")) %>%
-  ggplot(., aes(x=AGGREGATED_LANDCOVER, y=div))+
+  group_by(BCRNAME, AGGREGATED_LANDCOVER) %>%
+  summarise(mean_div = mean(div))
+
+all_data <- final_df %>%
+  filter(AGGREGATED_LANDCOVER %in% c("Urban Green Area", "Natural Green Area")) 
+
+
+ggplot(all_data, aes(x=AGGREGATED_LANDCOVER, y=div))+
   geom_violin(fill="azure3")+
-  stat_summary(fun.y=mean, geom="point", size=2.5, color="red")+
+  geom_point(data=mean_BCR, aes(x=AGGREGATED_LANDCOVER, y=mean_div, color=BCRNAME))+
+  geom_line(data=mean_BCR, aes(x=AGGREGATED_LANDCOVER, y=mean_div, group=BCRNAME, color=BCRNAME))+
+  stat_summary(fun.y=mean, geom="point", size=10, shape=15, alpha=0.7, color="red", aes(color=BCRNAME))+
   theme_classic()+
   ylab("Shannon diversity of habitat values")+
   xlab("Landcover")+
