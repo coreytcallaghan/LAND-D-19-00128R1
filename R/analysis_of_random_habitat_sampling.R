@@ -77,7 +77,14 @@ ggplot(all_data, aes(x=AGGREGATED_LANDCOVER, y=div))+
   theme_classic()+
   ylab("Shannon diversity of habitat values")+
   xlab("Landcover")+
-  coord_flip()
+  coord_flip()+
+  theme(axis.text.x=element_text(size=16))+
+  theme(axis.text.y=element_text(size=16))+
+  theme(axis.title.x = element_text(size=20))+
+  theme(axis.title.y=element_text(size=20))
+
+ggsave(file="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Figures/Figure 5/Habitat_diversity.png",
+       width=480, height=300, units="mm", dpi=600)
 
 
 
