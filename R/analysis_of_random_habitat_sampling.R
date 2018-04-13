@@ -87,9 +87,26 @@ ggsave(file="H:/Dissertation/Dissertation Chapters/Data Chapters/United States U
        width=480, height=300, units="mm", dpi=600)
 
 
+## stats to report for paper
+all_data %>%
+  group_by(AGGREGATED_LANDCOVER) %>%
+  summarise(mean=mean(div),
+            sd=sd(div))
 
-  
-  
+
+
+urban <- all_data %>%
+  filter(AGGREGATED_LANDCOVER == "Urban Green Area") %>%
+  .$div
+
+natural <- all_data %>%
+  filter(AGGREGATED_LANDCOVER == "Natural Green Area") %>%
+  .$div
+
+
+var.test(urban, natural) 
+
+t.test(urban, natural, var.equal=FALSE, paired=FALSE)
   
   
   
