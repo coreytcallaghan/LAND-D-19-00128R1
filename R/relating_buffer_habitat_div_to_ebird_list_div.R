@@ -117,11 +117,11 @@ ggplot(average_richness, aes(x=value, y=habitat_div))+
   geom_smooth(method="lm")+
   facet_wrap(key~CLASSIFICATION, scales="free_x")+
   theme_classic()+
-  xlab("Mean Respone Variable")+
-  ylab("Shannon diversity of habitat pixels")
+  xlab("Respone Variable")+
+  ylab("Habitat heterogeneity")
 
 ggsave("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Supplementary Figure 1/SuppFig1.png",
-       width=100, height=130, units="mm", dpi=600)
+       width=6, height=4.5, units="in", dpi=600)
 
 
 ## get r2 for each figure panel
