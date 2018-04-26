@@ -96,12 +96,18 @@ ggplot(urban_urbandiff, aes(y = urban_diff, x = BCR)) +
 landcover_entropy <- gather(bind_rows(lapply(clusters_landcover, calculate_entropy, type = "landcover"), 
                                       .id = "BCR"),
                             "zone", "value", -BCR) %>%
-  filter(zone %in% c("Natural.Green.Area", "Urban.Green.Area"))
+  filter(zone %in% c("Natural.Green.Area", "Urban.Green.Area")) %>%
+  mutate(zone = gsub("Natural.Green.Area", "Natural Green Area", .$zone)) %>%
+  mutate(zone = gsub("Urban.Green.Area", "Urban Green Area", .$zone))
 
 ggplot(landcover_entropy, aes(y = value, x = zone)) +
-  geom_boxplot() +
+  geom_violin(fill="azure3") +
   geom_point(aes(colour = BCR)) +
-  geom_line(aes(group = BCR))
+  geom_line(aes(group = BCR)) +
+  theme_classic() +
+  xlab("") +
+  ylab("Shannon diversity of cluster assignments") +
+  coord_flip()
 
 summary(nlme::lme(fixed = value ~ zone, random = ~ 1 | BCR, data = landcover_entropy))
 
