@@ -75,8 +75,8 @@ ggplot(all_data, aes(x=AGGREGATED_LANDCOVER, y=div))+
   geom_line(data=mean_BCR, aes(x=AGGREGATED_LANDCOVER, y=mean_div, group=BCRNAME, color=BCRNAME))+
   stat_summary(fun.y=mean, geom="point", size=10, shape=15, alpha=0.7, color="red", aes(color=BCRNAME))+
   theme_classic()+
-  ylab("Shannon diversity of habitat values")+
-  xlab("Landcover")+
+  ylab("Habitat heterogeneity")+
+  xlab("Aggregated landcover")+
   coord_flip()+
   theme(axis.text.x=element_text(size=16))+
   theme(axis.text.y=element_text(size=16))+
