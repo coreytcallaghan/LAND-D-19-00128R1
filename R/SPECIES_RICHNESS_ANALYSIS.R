@@ -47,7 +47,7 @@ ggplot(exotic_SR, aes(x=SR, colour=AGGREGATED_LANDCOVER))+
 ## run a gaussian model, transforming species richness by log transform
 tic(
 exotic_SR.gauss <- bam(log(SR) ~ AGGREGATED_LANDCOVER + SEASON  + s(BCR_name, bs="re") +
-                         s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING),
+                         s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING) - 1,
                        family=gaussian(), data=exotic_SR, chunk.size = 75000))
 toc()
 
@@ -67,7 +67,7 @@ plot.exotic.richness <- data.frame(exotic_SR,
 ## run a negbin model, without any transformations
 tic(
   exotic_SR.nb <- bam(SR ~ AGGREGATED_LANDCOVER + SEASON  + s(BCR_name, bs="re") +
-                           s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING),
+                           s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING) - 1,
                          family=nb(), data=exotic_SR, chunk.size = 75000))
 toc()
 
@@ -115,7 +115,7 @@ plot.native.richness <- data.frame(native_SR,
 ## run a negbin model, without any transformations
 tic(
   native_SR.nb <- bam(SR ~ AGGREGATED_LANDCOVER + SEASON  + s(BCR_name, bs="re") +
-                        s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING),
+                        s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING) - 1,
                       family=nb(), data=native_SR, chunk.size = 75000))
 toc()
 
@@ -127,9 +127,6 @@ plot.native.richness.nb <- data.frame(native_SR,
                                    mu   = exp(preds.native.richness.nb$fit),
                                    low  = exp(preds.native.richness.nb$fit - 1.96 * preds.native.richness.nb$se.fit),
                                    high = exp(preds.native.richness.nb$fit + 1.96 * preds.native.richness.nb$se.fit))
-
-
-
 
 
 
@@ -204,12 +201,12 @@ library(cowplot)
 library(ggpubr)
 
 richness_figure <- plot_grid(pr, per,
-                              labels=c("A", "B"),
+                              labels=c("a)", "b)"),
                               ncol=1, nrow=2)
 
-setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Figures/Figure 2")
+setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Figures/Figure 3")
 
-ggexport(richness_figure, filename="Figure_2.png", width=7100, height=5350, res=600)
+ggexport(richness_figure, filename="Figure_3.png", width=7100, height=5350, res=600)
 
 
 
@@ -268,6 +265,12 @@ summary(exotic_SR.nb)
 gamOut(exotic_SR.nb, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/exotic_richness.csv")
 
 
+rm(exotic_SR)
+rm(native_SR)
+rm(plot.exotic.richness.nb)
+rm(plot.native.richness.nb)
+rm(species_diversity_abundance_analysis)
+rm(species_richness_analysis)
 
-
+save.image("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Data/Model results/species_richness_model.RData")
 

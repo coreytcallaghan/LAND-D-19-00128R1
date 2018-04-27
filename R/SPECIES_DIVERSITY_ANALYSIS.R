@@ -47,7 +47,7 @@ ggplot(exotic_SD, aes(x=EFFECTIVE_SD, colour=AGGREGATED_LANDCOVER))+
 ## run a gaussian model, transforming species diversity by log transform
 tic(
   exotic_SD.gauss <- bam(log(EFFECTIVE_SD) ~ AGGREGATED_LANDCOVER + SEASON  + s(BCR_name, bs="re") +
-                           s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING),
+                           s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING) - 1,
                          family=gaussian(), data=exotic_SD, chunk.size = 75000))
 toc()
 
@@ -95,7 +95,7 @@ ggplot(exotic_SD, aes(x=EFFECTIVE_SD, colour=AGGREGATED_LANDCOVER))+
 ## run a gaussian model again, transforming species diversity by log transform
 tic(
   native_SD.gauss <- bam(log(EFFECTIVE_SD) ~ AGGREGATED_LANDCOVER + SEASON  + s(BCR_name, bs="re") +
-                           s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING),
+                           s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING) - 1,
                          family=gaussian(), data=native_SD, chunk.size = 75000))
 toc()
 
@@ -112,8 +112,8 @@ plot.native.diversity <- data.frame(native_SD,
 
 
 
-## combine the two richness files into one for plotting
-plot.species.diversity <- rbind(plot.native.diversity, plot.exotic.diversity.tw)
+## combine the two diversity files into one for plotting
+plot.species.diversity <- rbind(plot.native.diversity, plot.exotic.diversity)
 
 
 ## plot of mean predicted effective species diversity +/- standard error for native and exotics
@@ -146,7 +146,7 @@ pd <- plot.species.diversity %>%
 
 
 ## extract parameter estimates for landcover for both models and merge to plot
-exotic.diversity.lc <- termplot(exotic_SD.tw, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
+exotic.diversity.lc <- termplot(exotic_SD.gauss, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
 exotic.diversity.lc$variable <- 'Exotic Diversity'
 
 native.diversity.lc <- termplot(native_SD.gauss, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
@@ -183,12 +183,12 @@ library(cowplot)
 library(ggpubr)
 
 diversity_figure <- plot_grid(pd, ped,
-                              labels=c("A", "B"),
+                              labels=c("a)", "b)"),
                               ncol=1, nrow=2)
 
-setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Figures/Figure 3")
+setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Figures/Figure 4")
 
-ggexport(diversity_figure, filename="Figure_3.png", width=7100, height=5350, res=600)
+ggexport(diversity_figure, filename="Figure_4.png", width=7100, height=5350, res=600)
 
 
 
@@ -240,12 +240,20 @@ gamOut(native_SD.gauss, "H:/Dissertation/Dissertation Chapters/Data Chapters/Uni
 
 
 ### native
-anova.gam(exotic_SD.tw)
-summary(exotic_SD.tw)
+anova.gam(exotic_SD.gauss)
+summary(exotic_SD.gauss)
 
-gamOut(exotic_SD.tw, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/exotic_diversity.csv")
+gamOut(exotic_SD.gauss, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/exotic_diversity.csv")
 
 
+rm(exotic_SD)
+rm(native_SD)
+rm(plot.exotic.diversity)
+rm(plot.native.diversity)
+rm(species_diversity_abundance_analysis)
+rm(species_richness_analysis)
+
+save.image("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Data/Model results/species_diversity_model.RData")
 
 
 

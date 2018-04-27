@@ -64,8 +64,8 @@ plot.exotic.abundance <- data.frame(exotic_A,
 ## run a negbin model, no transforming
 tic(
   exotic_A.nb <- bam(A ~ AGGREGATED_LANDCOVER + SEASON  + s(BCR_name, bs="re") +
-                          s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING),
-                        family=nb(), data=exotic_A, chunk.size = 75000))
+                         s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING) - 1,
+                         family=nb(), data=exotic_A, chunk.size = 75000))
 toc()
 
 preds.exotic.abundance.nb <- predict(exotic_A.nb, exclude = "s(BCR_name)", se.fit = TRUE)
@@ -105,7 +105,7 @@ plot.native.abundance <- data.frame(native_A,
 ## run a negbin model
 tic(
   native_A.nb <- bam(A ~ AGGREGATED_LANDCOVER + SEASON  + s(BCR_name, bs="re") +
-                          s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING),
+                          s(LATITUDE, LONGITUDE) + s(DURATION_SAMPLING) - 1,
                         family=nb(), data=native_A, chunk.size = 75000))
 toc()
 
@@ -116,8 +116,8 @@ plot.native.abundance.nb <- data.frame(native_A,
                                     low  = exp(preds.native.abundance.nb$fit - 1.96 * preds.native.abundance.nb$se.fit),
                                     high = exp(preds.native.abundance.nb$fit + 1.96 * preds.native.abundance.nb$se.fit))
 
-## combine the two richness files into one for plotting
-plot.species.abundance <- rbind(plot.native.abundance, plot.exotic.abundance)
+## combine the two abundance files into one for plotting
+plot.species.abundance <- rbind(plot.native.abundance.nb, plot.exotic.abundance.nb)
 
 
 ## plot of mean predicted species abundance +/- standard error for native and exotics
@@ -150,10 +150,10 @@ pa <- plot.species.abundance %>%
 
 
 ## extract parameter estimates for landcover for both models and merge to plot
-exotic.abundance.lc <- termplot(exotic_A.gauss, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
+exotic.abundance.lc <- termplot(exotic_A.nb, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
 exotic.abundance.lc$variable <- 'Exotic Abundance'
 
-native.abundance.lc <- termplot(native_A.gauss, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
+native.abundance.lc <- termplot(native_A.nb, se=TRUE, plot=FALSE)$AGGREGATED_LANDCOVER
 native.abundance.lc$variable <- 'Native Abundance'
 
 ## landcover
@@ -188,12 +188,12 @@ library(cowplot)
 library(ggpubr)
 
 abundance_figure <- plot_grid(pa, pea,
-                              labels=c("A", "B"),
+                              labels=c("a)", "b)"),
                               ncol=1, nrow=2)
 
-setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Figures/Figure 4")
+setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Figures/Figure 2")
 
-ggexport(abundance_figure, filename="Figure_4.png", width=7100, height=5350, res=600)
+ggexport(abundance_figure, filename="Figure_2.png", width=7100, height=5350, res=600)
 
 
 
@@ -238,18 +238,36 @@ gamOut <- function(res, file="test.csv", ndigit=5, writecsv=T) {
 
 
 ### exotic
-anova.gam(native_A.gauss)
-summary(native_A.gauss)
+anova.gam(native_A.nb)
+summary(native_A.nb)
 
-gamOut(native_A.gauss, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/native_abundance.csv")
+gamOut(native_A.nb, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/native_abundance.csv")
 
 
 ### native
-anova.gam(exotic_A.gauss)
-summary(exotic_A.gauss)
+anova.gam(exotic_A.nb)
+summary(exotic_A.nb)
 
 
-gamOut(exotic_A.gauss, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/exotic_abundance.csv")
+gamOut(exotic_A.nb, "H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 2/exotic_abundance.csv")
+
+
+rm(exotic_A)
+rm(native_A)
+rm(plot.exotic.abundance.nb)
+rm(plot.native.abundance.nb)
+rm(species_diversity_abundance_analysis)
+rm(species_richness_analysis)
+
+save.image("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Data/Model results/species_abundance_model.RData")
+
+
+
+
+
+
+
+
 
 
 
