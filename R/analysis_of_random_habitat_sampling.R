@@ -63,7 +63,8 @@ final_df <- merged_df %>%
 mean_BCR <- final_df %>%
   filter(AGGREGATED_LANDCOVER %in% c("Urban Green Area", "Natural Green Area")) %>%
   group_by(BCRNAME, AGGREGATED_LANDCOVER) %>%
-  summarise(mean_div = mean(div))
+  summarise(mean_div = mean(div)) %>%
+  rename(BCR = BCRNAME)
 
 all_data <- final_df %>%
   filter(AGGREGATED_LANDCOVER %in% c("Urban Green Area", "Natural Green Area")) 
@@ -71,9 +72,9 @@ all_data <- final_df %>%
 
 ggplot(all_data, aes(x=AGGREGATED_LANDCOVER, y=div))+
   geom_violin(fill="azure3")+
-  geom_point(data=mean_BCR, aes(x=AGGREGATED_LANDCOVER, y=mean_div, color=BCRNAME))+
-  geom_line(data=mean_BCR, aes(x=AGGREGATED_LANDCOVER, y=mean_div, group=BCRNAME, color=BCRNAME))+
-  stat_summary(fun.y=mean, geom="point", size=10, shape=15, alpha=0.7, color="red", aes(color=BCRNAME))+
+  geom_point(data=mean_BCR, aes(x=AGGREGATED_LANDCOVER, y=mean_div, color=BCR))+
+  geom_line(data=mean_BCR, aes(x=AGGREGATED_LANDCOVER, y=mean_div, group=BCR, color=BCR))+
+  stat_summary(fun.y=mean, geom="point", size=6, shape=15, alpha=0.7, color="red", aes(color=BCR))+
   theme_classic()+
   ylab("Habitat heterogeneity")+
   xlab("Aggregated landcover")+
