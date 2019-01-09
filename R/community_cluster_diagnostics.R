@@ -120,22 +120,19 @@ landcover_entropy <- gather(bind_rows(lapply(clusters_landcover, calculate_entro
   mutate(BCR = gsub("NEW ENGLAND MID ATLANTIC COAST", "NEW ENGLAND/MID-ATLANTIC COAST", .$BCR))
 
 ggplot(landcover_entropy, aes(y = value, x = zone)) +
-  geom_violin(fill="azure3") +
-  geom_point(aes(colour = BCR)) +
-  geom_line(aes(group = BCR, colour = BCR)) +
-  stat_summary(fun.y=mean, geom="point", size=6, shape=15, alpha=0.7, color="red")+
+  geom_violin()+
+  stat_summary(fun.y=mean, geom="point", size=6, shape=15, alpha=0.7, color="red", aes(color=BCR))+
   theme_classic()+
-  ylab("Shannon diversity of cluster assignments")+
-  xlab("Aggregated landcover")+
+  ylab("Shannon entropy of cluster assignments")+
+  xlab("")+
   coord_flip()+
   theme(axis.text.x=element_text(size=16))+
   theme(axis.text.y=element_text(size=16))+
-  theme(axis.title.x = element_text(size=20))+
-  theme(axis.title.y=element_text(size=20))
+  theme(axis.title.x = element_text(size=14))+
+  theme(axis.title.y=element_text(size=14))
 
-ggsave(file="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Figures/Figure 6/Cluster_assignments.png",
-       width=480, height=300, units="mm", dpi=600)
-
+ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/cluster_assignments.png",
+       height=4, width=6, units="in")
 
 ## stats to report for paper
 landcover_entropy %>%

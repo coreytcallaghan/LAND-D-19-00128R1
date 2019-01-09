@@ -16,10 +16,10 @@ write_to_folder <- function(BCR) {
   eBird_all <- tbl(eBird_all_db, "usa-2017")
   
   ### read in eBird spatial dataset to select the checklists necessary to extract from sqlite database 
-  load("eBird data/eBird_sampling_spatial_data.RData")
+  load("eBird data/eBird_sampling_spatial_data_trimmed.RData")
   
   ### filter to the checklists for a given BCR name
-  checklists <- eBird_sampling_spatial_data %>%
+  checklists <- eBird_sampling_spatial_data_trimmed %>%
     filter(BCR_name == BCR) %>%
     .$SAMPLING_EVENT_IDENTIFIER
   
@@ -33,7 +33,7 @@ write_to_folder <- function(BCR) {
     collect(n=Inf)
   
   ### merge back together with the sampling data to keep some of the necessary sampling items
-  df <- df %>% inner_join(., eBird_sampling_spatial_data, by="SAMPLING_EVENT_IDENTIFIER")
+  df <- df %>% inner_join(., eBird_sampling_spatial_data_trimmed, by="SAMPLING_EVENT_IDENTIFIER")
   
   ### remove everything besides dataframe and BCR
   rm(list=setdiff(ls(), c("df", "BCR")))

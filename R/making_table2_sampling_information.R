@@ -1,6 +1,8 @@
 ## setwd 
 setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Data")
 
+library(dplyr)
+
 ## load data
 load("Data for Analysis/ANALYSIS_1_DATA.RData")
 

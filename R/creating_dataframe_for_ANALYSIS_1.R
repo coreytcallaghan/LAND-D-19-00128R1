@@ -5,6 +5,7 @@ setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban B
 library(readr)
 library(dplyr)
 library(vegan)
+library(lubridate)
 
 #### read in species classification excel document
 Species_classification <- read_csv("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Data/Bird Species Classifications/Species_classifications.csv")
@@ -48,7 +49,8 @@ for (fileName in fileNames) {
     rename(LONGITUDE = LONGITUDE.x)
   
   ## calculate richness by checklist
-  SR <- df %>% group_by(CLASSIFICATION, SAMPLING_EVENT_IDENTIFIER, AGGREGATED_LANDCOVER, BCR_name, OBSERVATION_DATE) %>%
+  SR <- df %>% group_by(CLASSIFICATION, SAMPLING_EVENT_IDENTIFIER, AGGREGATED_LANDCOVER, 
+                        BCR_name, OBSERVATION_DATE, EFFORT_DISTANCE_KM, TIME_OBSERVATIONS_STARTED) %>%
     summarise(SR = length(unique(COMMON_NAME)), DURATION_SAMPLING = mean(DURATION_MINUTES),
               LATITUDE = mean(LATITUDE), LONGITUDE = mean(LONGITUDE))
   
@@ -85,7 +87,8 @@ for (fileName in fileNames) {
     filter(number_X==0)
   
   ## Now, actually calculate diversity and abundance for each checklist
-  SD_A <- df_clean %>% group_by(CLASSIFICATION, SAMPLING_EVENT_IDENTIFIER, AGGREGATED_LANDCOVER, BCR_name, OBSERVATION_DATE) %>%
+  SD_A <- df_clean %>% group_by(CLASSIFICATION, SAMPLING_EVENT_IDENTIFIER, AGGREGATED_LANDCOVER, 
+                                 BCR_name, OBSERVATION_DATE, EFFORT_DISTANCE_KM, TIME_OBSERVATIONS_STARTED) %>%
     summarise(EFFECTIVE_SD = exp(diversity(OBSERVATION_COUNT)), A=sum(OBSERVATION_COUNT),
               DURATION_SAMPLING = mean(DURATION_MINUTES), LATITUDE = mean(LATITUDE), LONGITUDE = mean(LONGITUDE))
   
@@ -146,6 +149,17 @@ species_diversity_abundance_analysis$SEASON <- getSeason(species_diversity_abund
 species_richness_analysis$SEASON <- getSeason(species_richness_analysis$OBSERVATION_DATE)
 
 rm(getSeason)
+
+## add week to each dataframe for modelling analyses
+## Also refilter to only checklists < 2.5
+## not sure why I have to do this. Some odd things, but just double checking all
+species_diversity_abundance_analysis <- species_diversity_abundance_analysis %>%
+  mutate(Week=isoweek(OBSERVATION_DATE)) %>%
+  filter(EFFORT_DISTANCE_KM < 2.5)
+
+species_richness_analysis <- species_richness_analysis %>%
+  mutate(Week=isoweek(OBSERVATION_DATE)) %>%
+  filter(EFFORT_DISTANCE_KM < 2.5)
 
 ## save the data frames as .RData file for analyses
 save.image("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Data/Data for Analysis/ANALYSIS_1_DATA.RData")
