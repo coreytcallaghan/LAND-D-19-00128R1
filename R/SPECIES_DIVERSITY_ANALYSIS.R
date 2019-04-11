@@ -144,7 +144,7 @@ pd <- plot.species.diversity %>%
   guides(fill=FALSE)+
   facet_wrap(~CLASSIFICATION, scales="free")
 
-ggsave(pd, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/predicted_diversity.png",
+ggsave(pd, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/predicted_diversity.png",
        width=6, height=4, units="in")
 
 ## extract parameter estimates for landcover for both models and merge to plot
@@ -180,7 +180,7 @@ ped <- ggplot(landcover, aes(x=x, y=y))+
   theme(panel.grid.minor.y=element_blank(), panel.grid.major.y=element_line(color="gray83"))+
   facet_wrap(~variable, scales="free")
 
-ggsave(ped, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/parameter_diversity.png",
+ggsave(ped, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/parameter_diversity.png",
        width=6, height=3.1, units="in")
 
 ### making and exporting plot for publication
@@ -385,7 +385,7 @@ bind_rows(exotic_temporal_plots, native_temporal_plots) %>%
   ggtitle("Effective species diversity")
 
 
-ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/diversity_temporal_smooth.png", 
+ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/diversity_temporal_smooth.png", 
        width=8.7, height=5, units="in")
 
 

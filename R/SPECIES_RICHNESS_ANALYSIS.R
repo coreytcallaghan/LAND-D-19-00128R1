@@ -165,7 +165,7 @@ pr <- plot.species.richness %>%
                            axis.ticks.x=element_blank())+
   facet_wrap(~CLASSIFICATION, scales="free")
 
-ggsave(pr, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/predicted_richness.png",
+ggsave(pr, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/predicted_richness.png",
        width=6, height=3.1, units="in")
 
 ## extract parameter estimates for landcover for both models and merge to plot
@@ -201,7 +201,7 @@ per <- ggplot(landcover, aes(x=x, y=y))+
   theme(panel.grid.minor.y=element_blank(), panel.grid.major.y=element_line(color="gray83"))+
   facet_wrap(~variable, scales="free")
 
-ggsave(per, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/parameter_richness.png",
+ggsave(per, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/parameter_richness.png",
        width=6, height=3.1, units="in")
 
 ### making and exporting plot for publication
@@ -404,7 +404,7 @@ bind_rows(exotic_temporal_plots, native_temporal_plots) %>%
   ggtitle("Species richness")
 
 
-ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/richness_temporal_smooth.png", 
+ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/richness_temporal_smooth.png", 
        width=8.7, height=5, units="in")
 
 

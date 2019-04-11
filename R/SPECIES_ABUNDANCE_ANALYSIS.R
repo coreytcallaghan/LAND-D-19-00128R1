@@ -151,7 +151,7 @@ pa <- plot.species.abundance %>%
         axis.ticks.x=element_blank())+
   facet_wrap(~CLASSIFICATION, scales="free")
 
-ggsave(pa, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/predicted_abundance.png",
+ggsave(pa, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/predicted_abundance.png",
        width=6, height=3.1, units="in")
 
 ## extract parameter estimates for landcover for both models and merge to plot
@@ -187,7 +187,7 @@ pea <- ggplot(landcover, aes(x=x, y=y))+
   theme(panel.grid.minor.y=element_blank(), panel.grid.major.y=element_line(color="gray83"))+
   facet_wrap(~variable, scales="free")
 
-ggsave(pea, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/parameter_abundance.png",
+ggsave(pea, filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/parameter_abundance.png",
        width=6, height=3.1, units="in")
 
 
@@ -392,6 +392,6 @@ bind_rows(exotic_temporal_plots, native_temporal_plots) %>%
   ggtitle("Abundance")
 
 
-ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/abundance_temporal_smooth.png", 
+ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/abundance_temporal_smooth.png", 
        width=8.7, height=5, units="in")
 
