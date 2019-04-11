@@ -57,7 +57,7 @@ green_area %>%
   theme(axis.title.x = element_text(size=20))+
   theme(axis.title.y=element_text(size=20))
 
-ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/habitat_heterogeneity.png",
+ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/habitat_heterogeneity.png",
        height=4, width=6, units="in")
 
 # do a t-test to look for differences
@@ -99,7 +99,7 @@ green_area %>%
   guides(color=FALSE)+
   guides(linetype=FALSE)
 
-ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Appendix S4/species_richness.png")
+ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Appendix S7/species_richness.png")
 
 green_area %>%
   dplyr::select(EFFECTIVE_SD, lc_ent, AGGREGATED_LANDCOVER, CLASSIFICATION) %>%
@@ -118,7 +118,7 @@ green_area %>%
   guides(color=FALSE)+
   guides(linetype=FALSE)
 
-ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Appendix S4/species_diversity.png")
+ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Appendix S7/species_diversity.png")
 
 
 
