@@ -43,10 +43,12 @@ ggplot(., aes(x = k, group = metric)) +
   facet_wrap(~BCR, scales = "free", labeller = labeller(BCR = label_wrap_gen(18)))+
   xlab("k")+
   ylab("value")+
-  guides(color=FALSE)
+  guides(color=FALSE)+
+  theme_bw()+
+  theme(strip.text.x = element_text(size = 6, colour = "black"))
 
-ggsave(file="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 3/Appendix_3a.png",
-       width=480, height=320, units="mm", dpi=300)
+ggsave(file="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Appendix S8/cluster_aics.png",
+       width=9.5, height=8, units="in", dpi=300)
 
 
 ggplot(filter(allocations_diagnostics_plot, metric == "total_within_ss"), aes(x = k, group = metric)) +
@@ -131,7 +133,7 @@ ggplot(landcover_entropy, aes(y = value, x = zone)) +
   theme(axis.title.x = element_text(size=14))+
   theme(axis.title.y=element_text(size=14))
 
-ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape and Urban Planning/Revision 1/Figures/cluster_assignments.png",
+ggsave(filename="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Figures/cluster_assignments.png",
        height=4, width=6, units="in")
 
 ## stats to report for paper
@@ -178,8 +180,8 @@ ggplot(., aes(y = urban_diff, x = fct_inorder(BCR))) +
   ylab("Proportional difference")+
   xlab("BCR")
 
-ggsave(file="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 3/Appendix_3b.png",
-       width=420, height=320, units="mm", dpi=300)
+ggsave(file="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Appendix S8/proportional_difference.png",
+       width=8, height=5, units="in", dpi=300)
 
 
 
@@ -213,8 +215,8 @@ ggplot(cluster_metrics_lcdiff, aes(x=urban_diff, y=richness))+
   ylab("Total richness")
 
 
-ggsave(file="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Appendices/Appendix 3/Appendix_3c.png",
-       width=350, height=280, units="mm", dpi=300)
+ggsave(file="H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Submissions/Landscape Ecology/Appendix S8/richness_proportional.png",
+       width=7, height=6, units="in", dpi=300)
 
 ggplot(cluster_metrics_lcdiff, aes(x=urban_diff, y=diversity))+
   geom_point()+

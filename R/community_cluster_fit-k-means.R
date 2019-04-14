@@ -63,6 +63,6 @@ allocations <- mclapply(mc.cores = 16, # number of cores - can set to 1 if on wi
                         iter.max = 30, nstart = 10) # extra arugments to pass to kmeans
 names(allocations) <- gsub("_matrix.RData", "", files)
 
-saveRDS(allocations, file = "bcr_kmeans_allocations.rds")
+saveRDS(allocations, file = "Outputs/cluster_allocations/bcr_kmeans_allocations.rds")
 
 
