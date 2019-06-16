@@ -1,9 +1,3 @@
-## setwd 
-setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Data")
-
-## load data
-load("Data for Analysis/ANALYSIS_1_DATA.RData")
-
 
 ## packages
 library(dplyr)
@@ -11,6 +5,11 @@ library(mgcv)
 library(ggplot2)
 library(stringr)
 library(tictoc)
+
+native <- readRDS("Data/abund_div_native.RDS")
+exotic <- readRDS("Data/abund_div_exotic.RDS")
+
+species_diversity_abundance_analysis <- bind_rows(native, exotic)
 
 #################################################
 ## This file is for species abundance analysis ##

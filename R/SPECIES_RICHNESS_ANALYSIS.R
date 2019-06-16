@@ -1,8 +1,3 @@
-## setwd 
-setwd("H:/Dissertation/Dissertation Chapters/Data Chapters/United States Urban Bird Patterns/Data")
-
-## load data
-load("Data for Analysis/ANALYSIS_1_DATA.RData")
 
 
 ## packages
@@ -11,6 +6,11 @@ library(mgcv)
 library(ggplot2)
 library(stringr)
 library(tictoc)
+
+native <- readRDS("Data/richness_native.RDS")
+exotic <- readRDS("Data/richness_exotic.RDS")
+
+species_richness_analysis <- bind_rows(native, exotic)
 
 ################################################
 ## This file is for species richness analysis ##
